@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Cron Jobs</h1>
+
+    <ul id="completed"></ul>
+
+    <script>
+      // http://local.console.brickmmo.com:7777/ajax/radio/log
+      const url = "http://local.console.brickmmo.com:7777";
+      const completed = document.getElementById("completed");
+      let data = [];
+
+      // Get Cron Jobs
+      fetch(url + "/ajax/cron/list", {
+        method: "GET",
+      })
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (json) {
+          data = json;
+        })
+        .catch(function (err) {
+          console.log(`Error: ${err}`);
+        });
+
+      setInterval(function () {
+        let minute = new Date().getMinutes();
+        let cronConter = 0;
+        for (let i in data.crons) {
+          if (minute % data.crons[i].when == 0) {
+            console.log(data.crons[i].url);
+
+            fetch(url + data.crons[i].url, {
+              method: "GET",
+            });
+
+            cronConter++;
+
+            let li = document.createElement("li");
+            let liText = document.createTextNode(url + data.crons[i].url);
+            li.appendChild(liText);
+            completed.appendChild(li);
+          }
+        }
+        console.log("Executed " + cronConter + " cron jobs");
+      }, 60000);
+    </script>
+  </body>
+</html>

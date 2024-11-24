@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Cron Jobs</title>
   </head>
   <body>
     <h1>Cron Jobs</h1>
@@ -15,9 +15,10 @@
       const url = "http://local.console.brickmmo.com:7777";
       const completed = document.getElementById("completed");
       let data = [];
+      let city = "1";
 
       // Get Cron Jobs
-      fetch(url + "/ajax/cron/list", {
+      fetch(url + "/api/cron/list", {
         method: "GET",
       })
         .then(function (response) {
@@ -37,14 +38,18 @@
           if (minute % data.crons[i].when == 0) {
             console.log(data.crons[i].url);
 
-            fetch(url + data.crons[i].url, {
+            let fullUrl = url + data.crons[i].url;
+
+            fullUrl = fullUrl.replace("{city}", city);
+
+            fetch(fullUrl, {
               method: "GET",
             });
 
             cronConter++;
 
             let li = document.createElement("li");
-            let liText = document.createTextNode(url + data.crons[i].url);
+            let liText = document.createTextNode(fullUrl);
             li.appendChild(liText);
             completed.appendChild(li);
           }

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lively Radio</title>
+  </head>
+  <body>
+    <h1>Lively Radio</h1>
+
+    <audio controls id="audio"></audio>
+
+    <hr />
+
+    <button id="button">Start Lively Radio</button>
+
+    <hr />
+
+    <ul id="schedule"></ul>
+
+    <script>
+      const url = "http://local.console.brickmmo.com:7777";
+      const audio = document.getElementById("audio");
+      const schedule = document.getElementById("schedule");
+      let city = "1";
+
+      function loadNext() {
+        fetch(url + "/api/radio/next/" + city, {
+          method: "GET",
+        })
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (json) {
+            console.log(json);
+
+            audio.setAttribute(
+              "src",
+              url + "/radio_queue/" + json.log.id + ".mp3"
+            );
+            audio.play();
+
+            let scheduleLi = document.getElementsByClassName("schedule");
+            for (let i = 0; i < scheduleLi.length; i++) {
+              scheduleLi[i].style.backgroundColor = "";
+            }
+
+            let selectedSchedule = document.getElementById(
+              "minute-" + json.log.schedule_id
+            );
+            console.log("minute-" + json.log.schedule_id);
+            selectedSchedule.style.backgroundColor = "lightblue";
+          })
+          .catch(function (err) {
+            console.log(`Error: ${err}`);
+          });
+      }
+
+      function loadSchedule() {
+        fetch(url + "/api/radio/schedule/" + city, {
+          method: "GET",
+        })
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (json) {
+            console.log(json);
+
+            for (i in json.schedule) {
+              let li = document.createElement("li");
+              let liText = document.createTextNode(
+                json.schedule[i].minute + " " + json.schedule[i].name
+              );
+              li.appendChild(liText);
+              li.setAttribute("id", "minute-" + json.schedule[i].id);
+              li.classList.add("schedule");
+              schedule.appendChild(li);
+            }
+          })
+          .catch(function (err) {
+            console.log(`Error: ${err}`);
+          });
+      }
+
+      loadSchedule();
+
+      button.addEventListener("click", function () {
+        loadNext();
+      });
+
+      audio.addEventListener("ended", function () {
+        loadNext();
+      });
+    </script>
+  </body>
+</html>

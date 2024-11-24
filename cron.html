@@ -31,7 +31,7 @@
           console.log(`Error: ${err}`);
         });
 
-      setInterval(function () {
+      function checkCrons() {
         let minute = new Date().getMinutes();
         let cronConter = 0;
         for (let i in data.crons) {
@@ -55,7 +55,11 @@
           }
         }
         console.log("Executed " + cronConter + " cron jobs");
-      }, 60000);
+
+        setTimeout(checkCrons, 60000);
+      }
+
+      checkCrons();
     </script>
   </body>
 </html>

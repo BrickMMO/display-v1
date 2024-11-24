@@ -69,7 +69,7 @@
             for (i in json.schedule) {
               let li = document.createElement("li");
               let liText = document.createTextNode(
-                json.schedule[i].minute + " " + json.schedule[i].name
+                json.schedule[i].minute + " " + json.schedule[i].type_name
               );
               li.appendChild(liText);
               li.setAttribute("id", "minute-" + json.schedule[i].id);

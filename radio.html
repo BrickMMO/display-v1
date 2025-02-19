@@ -19,13 +19,13 @@
     <ul id="schedule"></ul>
 
     <script>
-      const url = "http://local.console.brickmmo.com:7777";
+      const url = "http://local.api.brickmmo.com:7777";
       const audio = document.getElementById("audio");
       const schedule = document.getElementById("schedule");
       let city = "1";
 
       function loadNext() {
-        fetch(url + "/api/radio/next/" + city, {
+        fetch(url + "/radio/next/" + city, {
           method: "GET",
         })
           .then(function (response) {
@@ -57,7 +57,7 @@
       }
 
       function loadSchedule() {
-        fetch(url + "/api/radio/schedule/" + city, {
+        fetch(url + "/radio/schedule/" + city, {
           method: "GET",
         })
           .then(function (response) {
